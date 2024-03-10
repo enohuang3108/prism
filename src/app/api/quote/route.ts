@@ -3,9 +3,9 @@ import yahooFinance from "yahoo-finance2";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const stock = searchParams.get("stock");
+  const symbol = searchParams.get("symbol");
 
-  if (stock == null) {
+  if (symbol == null) {
     return Response.json(
       {
         error: "Missing parameter",
@@ -21,12 +21,12 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const quote = await yahooFinance.quote(stock);
+  const quote = await yahooFinance.quote(symbol);
   const { regularMarketPrice, currency } = quote;
 
   return Response.json(
     {
-      regularMarketPrice,
+      unitPrice: regularMarketPrice,
       currency,
     },
     {

@@ -1,6 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Form,
   FormControl,
   FormField,
@@ -13,7 +21,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const Asset = () => {
+const AssetForm = () => {
   const [asset, setAsset] = useState(0);
   const formSchema = z.object({
     stock: z.string().min(1).max(10),
@@ -29,14 +37,14 @@ const Asset = () => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await fetch(`/api/quote?stock=${values.stock}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-        setAsset(json.regularMarketPrice * values.shares);
-      });
+    // await fetch(`/api/quote?stock=${values.stock}`, {
+    //   method: "GET",
+    // })
+    //   .then((res) => res.json())
+    //   .then((json) => {
+    //     console.log(json);
+    //     setAsset(json.regularMarketPrice * values.shares);
+    //   });
   }
 
   return (
@@ -77,10 +85,44 @@ const Asset = () => {
 };
 
 export default function Page() {
+  type Payment = {
+    id: string;
+    amount: number;
+    status: "pending" | "processing" | "success" | "failed";
+    email: string;
+  };
+
+  const payments: Payment[] = [
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    {
+      id: "489e1d42",
+      amount: 125,
+      status: "processing",
+      email: "example@gmail.com",
+    },
+    // ...
+  ];
+
   return (
     <main className="flex flex-col items-center justify-center space-y-1">
-      <Asset />
-      <Asset />
+      <Dialog>
+        <DialogTrigger>Open</DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </DialogDescription>
+          </DialogHeader>
+          <AssetForm />
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
