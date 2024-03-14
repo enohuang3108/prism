@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
   return Response.json(
     {
-      unitPrice: regularMarketPrice,
+      price: regularMarketPrice,
       currency,
     },
     {
